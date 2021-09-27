@@ -10,14 +10,14 @@ RUN cargo install cargo-chef --version $CARGO_CHEF_VERSION
 WORKDIR /app
 
 FROM chef AS planner
-COPY .docker/alpine .
+COPY . .
 RUN cargo chef prepare --recipe-path recipe.json
 
 FROM chef AS builder
 ARG APP_NAME
 COPY --from=planner /app/recipe.json recipe.json
 RUN cargo chef cook --package $APP_NAME --release --target x86_64-unknown-linux-musl --recipe-path recipe.json
-COPY .docker/alpine .
+COPY . .
 RUN cargo build --release --target x86_64-unknown-linux-musl
 
 FROM alpine AS runtime
