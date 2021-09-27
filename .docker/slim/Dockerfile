@@ -1,4 +1,4 @@
-ARG APP_NAME=rocket_cloud
+ARG APP_NAME=actix_cloud
 ARG RUST_VERSION=1.53.0
 FROM lukemathwalker/cargo-chef:latest-rust-$RUST_VERSION AS chef
 WORKDIR app
