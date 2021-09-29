@@ -10,7 +10,7 @@ pub struct SearchRequest {
 
 #[get("/search")]
 pub async fn search(info: web::Query<SearchRequest>, client: Data<Client>) -> impl Responder {
-    let response = client.get(format!("https://www.google.com/search?q={}", info.query))
+    let response = client.get(format!("https://en.wikipedia.org/wiki/{}", info.query))
         .send()
         .await
         .and_then(|r| r.error_for_status());
