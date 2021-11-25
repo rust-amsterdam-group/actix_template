@@ -1,5 +1,5 @@
-use actix_web::{get, Responder, web};
 use actix_web::web::Data;
+use actix_web::{get, web, Responder};
 use reqwest::Client;
 use serde::Deserialize;
 
@@ -9,14 +9,11 @@ pub struct SearchRequest {
 }
 
 #[get("/search")]
-pub async fn search(info: web::Query<SearchRequest>, client: Data<Client>) -> impl Responder {
-    let response = client.get(format!("https://en.wikipedia.org/wiki/{}", info.query))
+pub async fn search(params: web::Query<SearchRequest>, client: Data<Client>) -> impl Responder {
+    client
+        .get(format!("https://en.wikipedia.org/wiki/{}", params.query))
         .send()
         .await
-        .and_then(|r| r.error_for_status());
-
-    return match response {
-        Ok(_) => "success",
-        Err(_) => "oh snap"
-    };
+        .and_then(|r| r.error_for_status())
+        .map_or("oh snap!", |_| "success")
 }
